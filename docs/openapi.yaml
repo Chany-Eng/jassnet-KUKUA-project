@@ -1,0 +1,214 @@
+openapi: 3.1.0
+info:
+  title: JASSNET Billing API
+  version: 0.1.0
+  description: >-
+    Routes currently implemented by the development scaffold only. Payment,
+    provisioning, staff administration, and provider routes are intentionally absent.
+servers:
+  - url: https://apii.jassnet.co.tz/api/v1
+    description: Intended production host; not verified or deployed
+  - url: http://localhost/project/backend/public/api/v1
+    description: Example local XAMPP path
+paths:
+  /health:
+    get:
+      summary: API and database readiness
+      security: []
+      responses:
+        '200':
+          description: Database reachable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HealthResponse' }
+        '503':
+          description: Database unconfigured or unavailable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+  /portal/otp/request:
+    post:
+      summary: Request a generic PPPoE portal OTP response
+      description: >-
+        Rate-limited and generic. A notification job is queued; this does not
+        establish that a provider delivered an SMS. A confirmed provider/worker
+        is required before login can work.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [account_number]
+              properties:
+                account_number: { type: string, pattern: '^[0-9]{4,32}$', example: '0252230001' }
+      responses:
+        '202':
+          description: Generic accepted response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AcceptedResponse' }
+        '400': { description: Invalid request }
+        '500': { description: Internal error without details }
+  /staff/login:
+    post:
+      summary: Authenticate staff account with email and password
+      description: >-
+        Rate-limited. Requires an active user with at least one non-Customer role.
+        MFA-enabled accounts are denied until a verified MFA flow is implemented.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, maxLength: 254 }
+                password: { type: string, minLength: 1, maxLength: 1024 }
+      responses:
+        '200': { description: Staff session created }
+        '400': { description: Invalid request }
+        '401': { description: Generic invalid credentials/role response }
+        '429': { description: Rate limit exceeded }
+  /staff/me:
+    get:
+      summary: Read active staff identity, roles, and assigned permissions
+      security: [{ sessionCookie: [] }]
+      responses:
+        '200':
+          description: Active staff profile with CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { const: true }
+                  data:
+                    type: object
+                    properties:
+                      email: { type: string }
+                      roles: { type: array, items: { type: string } }
+                      permissions: { type: array, items: { type: string } }
+                      csrf_token: { type: string }
+        '401': { description: Missing, expired, or disabled staff session }
+  /staff/logout:
+    post:
+      summary: Logout current staff session
+      security: [{ sessionCookie: [] }]
+      parameters:
+        - in: header
+          name: X-CSRF-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Session invalidated }
+        '401': { description: Missing or expired staff session }
+        '403': { description: Invalid CSRF token }
+  /portal/otp/verify:
+    post:
+      summary: Verify a single-use five-minute OTP
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [account_number, otp]
+              properties:
+                account_number: { type: string, pattern: '^[0-9]{4,32}$' }
+                otp: { type: string, pattern: '^[0-9]{6}$' }
+      responses:
+        '200':
+          description: Authenticated session created
+          headers:
+            Set-Cookie:
+              schema: { type: string, description: HttpOnly session cookie; Secure when HTTPS is detected; SameSite=Strict }
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { const: true }
+                  data:
+                    type: object
+                    properties: { authenticated: { const: true } }
+        '401': { description: Generic invalid/expired OTP response }
+        '429': { description: Rate limit exceeded }
+  /portal/me:
+    get:
+      summary: Read the signed-in PPPoE account's portal summary
+      security: [{ sessionCookie: [] }]
+      responses:
+        '200':
+          description: Own account, recent payments, tickets, CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { const: true }
+                  data:
+                    type: object
+                    properties:
+                      account: { type: object }
+                      payments: { type: array, items: { type: object } }
+                      receipts: { type: array, items: { type: object } }
+                      tickets: { type: array, items: { type: object } }
+                      csrf_token: { type: string }
+        '401': { description: Missing or expired session }
+  /portal/logout:
+    post:
+      summary: Logout current portal session
+      security: [{ sessionCookie: [] }]
+      parameters:
+        - in: header
+          name: X-CSRF-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Session invalidated }
+        '401': { description: Missing or expired session }
+        '403': { description: Invalid CSRF token }
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: jassnet_session
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [ok, error]
+      properties:
+        ok: { const: false }
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+    AcceptedResponse:
+      type: object
+      required: [ok, data]
+      properties:
+        ok: { const: true }
+        data:
+          type: object
+          properties:
+            accepted: { const: true }
+            message: { type: string }
+    HealthResponse:
+      type: object
+      properties:
+        ok: { const: true }
+        data:
+          type: object
+          properties:
+            service: { const: jassnet-billing-api }
+            status: { const: ready }
+            database: { const: ok }
+            integrations: { type: object }

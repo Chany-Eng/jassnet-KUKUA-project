@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#101b35">
   <title>JASSNET | Hotspot &amp; PPPoE Billing</title>
   <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
 </head>
 <body>
   <header class="topbar">
@@ -15,8 +16,9 @@
     </a>
     <nav aria-label="Menyu kuu">
       <a href="#services">Huduma</a>
-      <a href="#how">Jinsi inavyofanya kazi</a>
+      <a href="#services">Huduma zetu</a>
       <a href="#portal">Portal ya mteja</a>
+      <a href="staff.html">Staff login</a>
     </nav>
     <a class="nav-cta" href="#portal">Ingia kwenye portal <span>↗</span></a>
   </header>
@@ -26,7 +28,7 @@
       <div class="hero-copy">
         <div class="eyebrow"><span class="live-dot"></span> MTANDAO UNAOKUUNGANISHA</div>
         <h1>Intaneti ya uhakika.<br><span>Huduma iliyo rahisi.</span></h1>
-        <p class="hero-text">Simamia akaunti yako ya JASSNET, lipa kifurushi chako na fuatilia huduma—kwa urahisi na usalama.</p>
+        <p class="hero-text">Simamia akaunti yako ya JASSNET na fuatilia huduma zako—kwa urahisi na usalama.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#portal">Fungua portal <span>→</span></a>
           <a class="button button-quiet" href="#services">Ona huduma <span>↓</span></a>
@@ -44,14 +46,15 @@
       </div>
     </section>
 
-    <section class="metrics" aria-label="Faida za JASSNET"><div class="metric"><span class="metric-icon">⌁</span><span><strong>Muunganisho wa uhakika</strong><small>Intaneti kwa kila siku</small></span></div><div class="metric"><span class="metric-icon">◷</span><span><strong>Lipa kwa urahisi</strong><small>Fuatilia malipo yako</small></span></div><div class="metric"><span class="metric-icon">♧</span><span><strong>Msaada unapatikana</strong><small>Tupo kukusaidia</small></span></div><div class="metric"><span class="metric-icon">⌂</span><span><strong>Huduma za JASSNET</strong><small>Hotspot na PPPoE</small></span></div></section>
+    <section class="metrics" aria-label="Faida za JASSNET"><div class="metric"><span class="metric-icon">⌁</span><span><strong>Muunganisho wa uhakika</strong><small>Intaneti kwa kila siku</small></span></div><div class="metric"><span class="metric-icon">◷</span><span><strong>Fuatilia akaunti</strong><small>Taarifa za huduma yako</small></span></div><div class="metric"><span class="metric-icon">♧</span><span><strong>Msaada unapatikana</strong><small>Tupo kukusaidia</small></span></div><div class="metric"><span class="metric-icon">⌂</span><span><strong>Huduma za JASSNET</strong><small>Hotspot na PPPoE</small></span></div></section>
 
     <section class="services section" id="services"><div class="section-heading"><div><div class="eyebrow dark-eyebrow">HUDUMA ZETU</div><h2>Chagua huduma inayokufaa.</h2></div><p>Simamia huduma zako kupitia portal salama ya mteja.</p></div><div class="service-cards"><article class="service-card"><span class="service-icon hotspot-icon">⌁</span><span class="service-tag">WI-FI YA UMMA</span><h3>Hotspot</h3><p>Unganisha vifaa vyako kwenye mtandao wa JASSNET na ufurahie intaneti kwa urahisi.</p><a href="#portal">Jifunze zaidi <span>→</span></a></article><article class="service-card featured"><span class="service-icon pppoe-icon">⌘</span><span class="service-tag">NYUMBANI NA OFISINI</span><h3>PPPoE</h3><p>Huduma ya intaneti binafsi yenye akaunti yako maalum na usimamizi salama.</p><a href="#portal">Fungua portal <span>→</span></a></article><article class="service-card"><span class="service-icon support-icon">✳</span><span class="service-tag">TUKO PAMOJA</span><h3>Msaada kwa wateja</h3><p>Wasilisha tiketi ya msaada na ufuatilie maendeleo ya ombi lako.</p><a href="#portal">Pata msaada <span>→</span></a></article></div></section>
 
-    <section class="portal-band" id="portal"><div><div class="eyebrow"><span class="live-dot"></span> PORTAL YA WATEJA WA PPPoE</div><h2>Akaunti yako,<br><span>mikononi mwako.</span></h2><p>Ingia kwa namba ya akaunti yako. Tutakutumia OTP kwenye simu iliyosajiliwa. OTP si nenosiri la router yako.</p><div class="portal-note"><span>🔒</span> Usimpe mtu yeyote OTP yako. JASSNET haitakuomba umtumie mtu OTP.</div></div><form class="portal-form" id="otp-form"><div class="form-heading"><span class="form-icon">↗</span><span><strong>Ingia kwenye akaunti</strong><small>PPPoE self-service portal</small></span></div><label for="account-number">Namba ya akaunti</label><input id="account-number" name="accountNumber" type="text" inputmode="numeric" autocomplete="username" placeholder="Mfano: 0252230001" maxlength="32" required><button class="button button-primary form-submit" type="submit">Tuma OTP kwenye simu <span>→</span></button><p class="form-disclaimer">OTP itatumwa kwa namba ya simu iliyosajiliwa. Kwa sasa portal ya OTP inasubiri backend.</p><div class="form-message" id="form-message" role="status" aria-live="polite" hidden></div></form></section>
+    <section class="portal-band" id="portal"><div><div class="eyebrow"><span class="live-dot"></span> PORTAL YA WATEJA WA PPPoE</div><h2>Akaunti yako,<br><span>mikononi mwako.</span></h2><p>Ingia kwa namba ya akaunti yako. OTP ya mara moja hutumwa kwenye simu iliyosajiliwa, hudumu dakika 5 na si nenosiri la router yako.</p><div class="portal-note"><span>🔒</span> Usimpe mtu yeyote OTP yako. JASSNET haitakuomba umtumie mtu OTP.</div></div><div class="portal-form"><div class="form-heading"><span class="form-icon">↗</span><span><strong>Ingia kwenye akaunti</strong><small>PPPoE self-service portal</small></span></div><form id="otp-form"><label for="account-number">Namba ya akaunti</label><input id="account-number" name="accountNumber" type="text" inputmode="numeric" autocomplete="username" placeholder="Mfano: 0252230001" maxlength="32" required><button class="button button-primary form-submit" type="submit">Tuma OTP kwenye simu <span>→</span></button></form><form id="verify-form" hidden><label for="otp-code">OTP ya tarakimu 6</label><input id="otp-code" name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="••••••" required><button class="button button-primary form-submit" type="submit">Thibitisha OTP <span>→</span></button><p class="form-disclaimer">OTP hudumu dakika 5 na inaweza kutumika mara moja tu.</p></form><button class="text-button" id="change-account" type="button" hidden>Tumia namba nyingine</button><p class="form-disclaimer" id="portal-hint">Utapokea ujumbe wa jumla wa uthibitisho. Provider ya SMS lazima ithibitishwe kabla ya OTP kutumwa.</p><div class="form-message" id="form-message" role="status" aria-live="polite" hidden></div><section id="portal-dashboard" class="portal-dashboard" hidden aria-live="polite"><h3>Muhtasari wa akaunti</h3><div id="portal-account"></div><h4>Malipo ya hivi karibuni</h4><div id="portal-payments"></div><h4>Risiti</h4><div id="portal-receipts"></div><h4>Tiketi za msaada</h4><div id="portal-tickets"></div><button class="button button-quiet logout-button" id="logout-button" type="button">Toka kwenye akaunti</button></section></div></section>
   </main>
 
   <footer><a class="brand footer-brand" href="#home"><span class="brand-mark">J</span><span>JASSNET <small>NETWORK SERVICES</small></span></a><span>© <span id="year"></span> JASSNET. Haki zote zimehifadhiwa.</span><a href="#portal">Msaada kwa wateja</a></footer>
+  <script src="assets/js/api.js" defer></script>
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>

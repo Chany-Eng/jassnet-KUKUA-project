@@ -6,4 +6,6 @@ Responsive Swahili-language frontend for the JASSNET Hotspot & PPPoE Billing Sys
 
 Open `index.html` in a browser, or serve this directory with Apache/XAMPP. The default API base URL is `http://localhost/project/backend/public/api/v1`; configure `window.JASSNET_API_BASE_URL` before `assets/js/app.js` when deploying to a different API host.
 
-The PPPoE OTP form calls `POST /portal/otp/request`. It is not a working login until that backend endpoint and a confirmed SMS provider have been configured. Do not place API secrets in this directory.
+The portal uses `POST /portal/otp/request`, `POST /portal/otp/verify`, `GET /portal/me`, and `POST /portal/logout` as documented in [../docs/API.md](../docs/API.md). It displays generic OTP request feedback because the SMS provider/worker is not yet implemented; successful request acceptance does not prove that an SMS was delivered. The portal does not store OTPs or credentials in local storage. Do not place API secrets in this directory.
+
+The separate staff entry page is `staff.html`; it authenticates against the staff session routes, shows only permission-labelled module placeholders, and logs out through the backend. The backend has not implemented staff operations, so those cards are intentionally disabled placeholders—not working dashboards. Payments, receipt downloads, HotSpot management, tickets/work orders, and settings likewise have no active operations API.

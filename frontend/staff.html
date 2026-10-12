@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="sw">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b35">
+  <title>Staff login | JASSNET</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+  <link rel="stylesheet" href="assets/css/staff.css">
+</head>
+<body class="staff-page">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="JASSNET mwanzo"><span class="brand-mark">J</span><span>JASSNET <small>NETWORK SERVICES</small></span></a>
+    <nav aria-label="Menyu kuu"><a href="index.html#services">Huduma</a><a href="index.html#portal">Portal ya mteja</a></nav>
+    <a class="nav-cta" href="index.html">Rudi tovuti kuu <span>↗</span></a>
+  </header>
+  <main class="staff-main">
+    <section class="staff-intro">
+      <div class="eyebrow"><span class="live-dot"></span> MFUMO WA NDANI WA JASSNET</div>
+      <h1>Karibu kwenye<br><span>staff portal.</span></h1>
+      <p>Ingia kwa akaunti ya kazi uliyopewa. Ruhusa hutegemea jukumu lako na huhakikiwa na backend.</p>
+      <div class="staff-role-list" aria-label="Majukumu ya mfumo"><span>Super Admin</span><span>Admin</span><span>Technician</span><span>Accountant</span><span>Customer Service</span><span>Agent</span></div>
+      <p class="staff-security">🔒 Usitumie akaunti ya mteja wa PPPoE hapa. Usishirikishe password yako.</p>
+    </section>
+    <section class="staff-card" aria-labelledby="staff-heading">
+      <div class="staff-card-heading"><span class="form-icon">↗</span><span><strong id="staff-heading">Staff login</strong><small>Ingia kwenye mfumo wa kazi</small></span></div>
+      <form id="staff-login-form" autocomplete="on">
+        <label for="staff-email">Email ya kazi</label>
+        <input id="staff-email" name="email" type="email" autocomplete="username" maxlength="254" required>
+        <label for="staff-password">Password</label>
+        <input id="staff-password" name="password" type="password" autocomplete="current-password" maxlength="1024" required>
+        <button class="button button-primary form-submit" type="submit">Ingia <span>→</span></button>
+      </form>
+      <div id="staff-message" class="form-message" role="status" aria-live="polite" hidden></div>
+      <div id="staff-dashboard" class="staff-dashboard" hidden>
+        <div class="staff-user"><div><small>UMEINGIA KAMA</small><strong id="staff-identity"></strong></div><button id="staff-logout" class="text-button" type="button">Toka</button></div>
+        <div id="staff-role-chips" class="staff-role-list"></div>
+        <h2>Dashibodi yako</h2>
+        <p class="dashboard-notice">Hivi sasa login na ruhusa zinasomwa na backend. Kurasa za usimamizi hazijaunganishwa na API bado.</p>
+        <div id="staff-modules" class="staff-modules"></div>
+      </div>
+    </section>
+  </main>
+  <footer><a class="brand footer-brand" href="index.html"><span class="brand-mark">J</span><span>JASSNET <small>NETWORK SERVICES</small></span></a><span>Ufikiaji wa staff pekee · © <span id="year"></span> JASSNET</span><a href="index.html#portal">Portal ya mteja</a></footer>
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/staff.js" defer></script>
+</body>
+</html>
