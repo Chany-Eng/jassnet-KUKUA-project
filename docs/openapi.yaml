@@ -26,6 +26,38 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
+  /hotspot/packages:
+    get:
+      summary: List enabled Hotspot packages
+      description: Read-only public catalog. Returns only enabled plans whose service type is hotspot.
+      security: []
+      responses:
+        '200':
+          description: Current Hotspot package catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { const: true }
+                  data:
+                    type: object
+                    properties:
+                      packages:
+                        type: array
+                        items:
+                          type: object
+                          required: [id, name, speed_down_kbps, speed_up_kbps, price_minor, currency, validity_days, data_cap_bytes]
+                          properties:
+                            id: { type: integer }
+                            name: { type: string }
+                            speed_down_kbps: { type: integer }
+                            speed_up_kbps: { type: integer }
+                            price_minor: { type: integer }
+                            currency: { type: string, example: TZS }
+                            validity_days: { type: integer }
+                            data_cap_bytes: { type: [integer, 'null'] }
+        '503': { description: Package catalog temporarily unavailable }
   /portal/otp/request:
     post:
       summary: Request a generic PPPoE portal OTP response

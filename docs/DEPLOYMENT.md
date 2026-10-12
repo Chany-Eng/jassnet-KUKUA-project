@@ -31,3 +31,7 @@ Define encrypted backup destination, database and config cadence, retention, off
 ## Operational gaps
 
 No deployment, backup, restore, rollback, router canary, provider sandbox, DNS/TLS, firewall, WireGuard, or production smoke-test evidence has been provided or run in this workspace. This runbook is an operator checklist, not proof of integration.
+
+## Hotspot captive portal readiness
+
+`frontend/hotspot/index.html` is the package catalog page and `GET /api/v1/hotspot/packages` reads enabled Hotspot plans. Configure real Hotspot plans before expecting cards to appear. Checkout is intentionally disabled until an approved Snipper/ClickPesa product, official checkout/status/signature docs and sandbox tests exist. Deploy the public path `/hotspot/`, verify HTTPS and its walled-garden assets, then use the router-specific steps in [HOTSPOT_SETUP.md](HOTSPOT_SETUP.md); do not configure a router redirect based only on the URL.

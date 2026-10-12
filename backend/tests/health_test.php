@@ -68,6 +68,15 @@ try {
         throw new RuntimeException('Health endpoint contract did not match.');
     }
 
+    [$packagesStatus, $packages] = $request('/hotspot/packages');
+    if ($packagesStatus === 200) {
+        if (!is_array($packages['data']['packages'] ?? null)) {
+            throw new RuntimeException('Hotspot package catalog response did not contain a packages array.');
+        }
+    } elseif ($packagesStatus !== 503 || ($packages['error']['code'] ?? '') !== 'packages_unavailable') {
+        throw new RuntimeException('Hotspot package catalog did not return its documented response.');
+    }
+
     [$staffInputStatus, $staffInput] = $request('/staff/login', 'POST', '{"email":"not-an-email","password":"x"}');
     if ($staffInputStatus !== 400 || ($staffInput['error']['code'] ?? '') !== 'invalid_request') {
         throw new RuntimeException('Staff login validation did not return the expected JSON error.');
@@ -91,7 +100,7 @@ try {
     if ($missingStatus !== 404 || ($missing['error']['code'] ?? '') !== 'not_found') {
         throw new RuntimeException('Unknown route did not return the expected JSON 404.');
     }
-    echo "Queue encryption, health, staff auth guards, request validation, and not-found contracts: PASS\n";
+    echo "Queue encryption, health, Hotspot catalog, staff auth guards, request validation, and not-found contracts: PASS\n";
 } catch (Throwable $error) {
     fwrite(STDERR, $error->getMessage() . "\n");
     exit(1);

@@ -2,7 +2,7 @@
 
 ## Planned customer-facing URL
 
-User-selected target: `https://jassnet.co.tz/hotspot/`. This is **not live or configured on a router yet**. The current frontend has no deployed `/hotspot/` captive-login page, and the backend has no HotSpot authentication/device-binding endpoint. Do not paste this URL into production router profiles until the page, DNS, TLS, backend flow, and one-router test are ready.
+User-selected target: `https://jassnet.co.tz/hotspot/`. A package-catalog page now exists at `frontend/hotspot/index.html` and the API can read enabled Hotspot plans. However, the hostname/TLS are not verified, payment/checkout and HotSpot authentication/device-binding are not implemented, and no router has been configured. The page currently disables payment rather than pretending a payment succeeded. Do not paste this URL into production router profiles until deployment, payment docs/provider validation, router hand-off, and a one-router test are ready.
 
 If the selected page is served over ordinary HTTPS, browsers normally connect to TCP 443 and the URL omits `:443`. That is only the web-host port—not a confirmed MikroTik HotSpot listener, RADIUS port, RouterOS management port, or API setting. Actual router profile/server ports and login method must be read from the target router. Do not expose Winbox/RouterOS API to the public Internet.
 

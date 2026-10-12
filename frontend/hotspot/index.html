@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="sw">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b35">
+  <meta name="description" content="Chagua kifurushi cha JASSNET Hotspot na ufuatilie hali ya huduma yako.">
+  <title>JASSNET Hotspot | Vifurushi</title>
+  <link rel="stylesheet" href="../assets/css/app.css">
+  <link rel="stylesheet" href="../assets/css/hotspot.css">
+</head>
+<body class="hotspot-page">
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="JASSNET mwanzo"><span class="brand-mark">J</span><span>JASSNET <small>NETWORK SERVICES</small></span></a>
+    <nav aria-label="Menyu kuu"><a href="#packages">Vifurushi</a><a href="#how-it-works">Jinsi ya kuanza</a></nav>
+    <a class="nav-cta" href="../index.html">Tovuti kuu <span>↗</span></a>
+  </header>
+
+  <main>
+    <section class="hotspot-hero">
+      <div class="hotspot-hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> JASSNET HOTSPOT</div>
+        <h1>Wi-Fi yako,<br><span>kwa urahisi.</span></h1>
+        <p>Chagua kifurushi kinachokufaa. Vifurushi vinavyoonekana hapa hupakiwa kutoka mfumo wa JASSNET.</p>
+        <a class="button button-primary" href="#packages">Ona vifurushi <span>↓</span></a>
+        <div class="hotspot-assurance"><span>🔒</span> Usalama wa akaunti yako ni muhimu. Usitume password au OTP kwa mtu mwingine.</div>
+      </div>
+      <div class="hotspot-visual" aria-hidden="true">
+        <div class="hotspot-ring ring-one"></div><div class="hotspot-ring ring-two"></div><div class="hotspot-ring ring-three"></div>
+        <span class="hotspot-dot dot-one"></span><span class="hotspot-dot dot-two"></span><span class="hotspot-dot dot-three"></span>
+        <div class="hotspot-signal">⌁</div>
+        <div class="hotspot-device"><span class="device-mark">J</span><span class="device-wifi">⌁</span><strong>JASSNET<br>HOTSPOT</strong><small>UNGANISHO SALAMA</small></div>
+        <div class="hotspot-float"><span>✓</span><div><small>Karibu JASSNET</small><strong>Chagua kifurushi</strong></div></div>
+      </div>
+    </section>
+
+    <section class="hotspot-steps" id="how-it-works" aria-label="Hatua za kuanza"><div><span>01</span><strong>Chagua kifurushi</strong><small>Angalia bei na muda</small></div><i>→</i><div><span>02</span><strong>Lipia salama</strong><small>Njia ya malipo itathibitishwa</small></div><i>→</i><div><span>03</span><strong>Unganisha</strong><small>Fuata maelekezo ya router</small></div></section>
+
+    <section class="package-section" id="packages">
+      <div class="package-heading"><div><div class="eyebrow dark-eyebrow">VIFURUSHI VYA HOTSPOT</div><h2>Chagua kinachokufaa.</h2></div><p>Bei na masharti yatathibitishwa na mfumo kabla ya malipo.</p></div>
+      <div id="package-state" class="package-state" role="status" aria-live="polite"><span class="loading-dot"></span> Inapakia vifurushi...</div>
+      <div id="package-grid" class="package-grid" hidden></div>
+      <div id="package-empty" class="package-empty" hidden><span class="empty-icon">⌁</span><strong>Hakuna kifurushi kinachopatikana kwa sasa.</strong><span>Tafadhali jaribu tena baadaye au wasiliana na Huduma kwa Wateja wa JASSNET.</span></div>
+    </section>
+
+    <section class="checkout-panel" aria-labelledby="checkout-title">
+      <div class="checkout-copy"><div class="eyebrow dark-eyebrow">MALIPO YA HOTSPOT</div><h2 id="checkout-title">Lipa moja kwa moja hapa.</h2><p>Ukurasa huu umeandaliwa kwa kuchagua kifurushi na kuendelea na checkout. Hatua ya malipo imezimwa hadi Snipper au ClickPesa ithibitishwe kwa nyaraka rasmi na sandbox.</p></div>
+      <form id="checkout-form" class="checkout-form">
+        <label for="selected-package">Kifurushi ulichochagua</label>
+        <div id="selected-package" class="selected-package">Chagua kifurushi hapo juu</div>
+        <label for="customer-phone">Namba ya simu ya malipo</label>
+        <input id="customer-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Mfano: 07XXXXXXXX" maxlength="20" disabled>
+        <button id="pay-button" class="button button-primary checkout-button" type="button" disabled>Malipo bado hayajaunganishwa</button>
+        <p class="checkout-note" id="checkout-note" role="status">Hakuna malipo yatakayochakatwa kwa sasa. Taarifa za providers bado hazijathibitishwa.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="../index.html"><span class="brand-mark">J</span><span>JASSNET <small>NETWORK SERVICES</small></span></a><span>© <span id="year"></span> JASSNET · Hotspot</span><a href="../index.html#portal">Msaada kwa wateja</a></footer>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/hotspot.js" defer></script>
+</body>
+</html>
