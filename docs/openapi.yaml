@@ -53,7 +53,7 @@ paths:
         '500': { description: Internal error without details }
   /staff/login:
     post:
-      summary: Authenticate staff account with email and password
+      summary: Authenticate staff account with username and password
       description: >-
         Rate-limited. Requires an active user with at least one non-Customer role.
         MFA-enabled accounts are denied until a verified MFA flow is implemented.
@@ -64,9 +64,9 @@ paths:
           application/json:
             schema:
               type: object
-              required: [email, password]
+              required: [username, password]
               properties:
-                email: { type: string, format: email, maxLength: 254 }
+                username: { type: string, pattern: '^[a-z][a-z0-9_-]{0,39}\.[a-z][a-z0-9_-]{0,39}$', example: 'hassan.hassan' }
                 password: { type: string, minLength: 1, maxLength: 1024 }
       responses:
         '200': { description: Staff session created }
@@ -89,7 +89,8 @@ paths:
                   data:
                     type: object
                     properties:
-                      email: { type: string }
+                      username: { type: string }
+                      full_name: { type: string }
                       roles: { type: array, items: { type: string } }
                       permissions: { type: array, items: { type: string } }
                       csrf_token: { type: string }

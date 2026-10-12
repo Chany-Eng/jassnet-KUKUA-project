@@ -31,7 +31,7 @@ function setButtonBusy(form, busy) {
 }
 
 function renderStaff(profile) {
-  document.getElementById('staff-identity').textContent = profile.email;
+  document.getElementById('staff-identity').textContent = profile.full_name ? `${profile.full_name} · ${profile.username}` : profile.username;
   const roles = document.getElementById('staff-role-chips');
   roles.replaceChildren();
   for (const role of profile.roles) {
@@ -76,16 +76,16 @@ async function restoreSession() {
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const values = new FormData(loginForm);
-  const email = values.get('email')?.toString().trim() || '';
+  const username = values.get('username')?.toString().trim().toLowerCase() || '';
   const password = values.get('password')?.toString() || '';
-  if (!email || !password) {
-    showStatus('Jaza email na password.', true);
+  if (!/^[a-z][a-z0-9_-]{0,39}\.[a-z][a-z0-9_-]{0,39}$/.test(username) || !password) {
+    showStatus('Weka username kwa mfumo firstname.lastname na password.', true);
     return;
   }
   setButtonBusy(loginForm, true);
   statusMessage.hidden = true;
   try {
-    await apiRequest('/staff/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+    await apiRequest('/staff/login', { method: 'POST', body: JSON.stringify({ username, password }) });
     const profile = await apiRequest('/staff/me');
     renderStaff(profile.data);
     loginForm.reset();

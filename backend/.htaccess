@@ -1,0 +1,7 @@
+Options -Indexes
+
+# The repository is under XAMPP's htdocs during local development. Deny direct
+# web access to source, SQL migrations, tests, and private environment files.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>

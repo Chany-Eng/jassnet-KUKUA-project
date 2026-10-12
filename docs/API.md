@@ -5,8 +5,8 @@ Base path: `/api/v1`. All JSON responses use `{ "ok": boolean, "data"?: object, 
 | Method | Path | Auth | Purpose/status |
 |---|---|---|---|
 | GET | `/health` | Public | API and database health; 503 if DB is unavailable/unconfigured. Integrations explicitly marked unverified/disabled. |
-| POST | `/staff/login` | Public, rate-limited | Staff email/password login; only active users assigned a non-Customer role can create a staff session. |
-| GET | `/staff/me` | Staff session | Revalidates the active staff identity; returns role names, assigned permission names, and CSRF token. |
+| POST | `/staff/login` | Public, rate-limited | Staff `username`/password login (`firstname.lastname`); only active users assigned a non-Customer role can create a staff session. |
+| GET | `/staff/me` | Staff session | Revalidates the active staff identity; returns username, full name, role names, assigned permission names, and CSRF token. |
 | POST | `/staff/logout` | Staff session + `X-CSRF-Token` | Invalidates staff session. |
 | POST | `/portal/otp/request` | Public, rate-limited | Request PPPoE-only OTP; `202` generic response whether account exists or not. Enqueues notification for an unimplemented worker. |
 | POST | `/portal/otp/verify` | Public, rate-limited | Verify `{ "account_number": "0252230001", "otp": "123456" }`; single-use 5-minute challenge; successful response creates secure session cookie. |

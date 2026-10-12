@@ -1,0 +1,14 @@
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Local logs, dumps, and generated artifacts
+*.log
+*.sql.gz
+*.dump
+.DS_Store
+Thumbs.db

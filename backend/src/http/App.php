@@ -22,6 +22,7 @@ final class App
             $this->configureSession();
             $router = new Router();
             $router->add('GET', '/api/v1/health', fn () => $this->health());
+            $router->add('GET', '/api/v1/hotspot/packages', fn () => $this->hotspotPackages());
             $router->add('POST', '/api/v1/staff/login', fn (Request $request) => $this->staffLogin($request));
             $router->add('GET', '/api/v1/staff/me', fn () => $this->staffMe());
             $router->add('POST', '/api/v1/staff/logout', fn () => $this->staffLogout());
@@ -107,6 +108,29 @@ final class App
         ]);
     }
 
+    private function hotspotPackages(): never
+    {
+        try {
+            $pdo = Database::connection();
+            $stmt = $pdo->query("SELECT id, name, speed_down_kbps, speed_up_kbps, price_minor, currency, validity_days, data_cap_bytes FROM service_plans WHERE service_type = 'hotspot' AND enabled = 1 ORDER BY price_minor ASC, id ASC");
+            $packages = array_map(static function (array $plan): array {
+                return [
+                    'id' => (int) $plan['id'],
+                    'name' => $plan['name'],
+                    'speed_down_kbps' => (int) $plan['speed_down_kbps'],
+                    'speed_up_kbps' => (int) $plan['speed_up_kbps'],
+                    'price_minor' => (int) $plan['price_minor'],
+                    'currency' => $plan['currency'],
+                    'validity_days' => (int) $plan['validity_days'],
+                    'data_cap_bytes' => $plan['data_cap_bytes'] === null ? null : (int) $plan['data_cap_bytes'],
+                ];
+            }, $stmt->fetchAll());
+            Response::ok(['packages' => $packages]);
+        } catch (Throwable) {
+            Response::error(503, 'packages_unavailable', 'Vifurushi havipatikani kwa sasa. Jaribu tena baadaye.');
+        }
+    }
+
     private function requestOtp(Request $request): never
     {
         $body = $request->json();
@@ -121,34 +145,34 @@ final class App
     private function staffLogin(Request $request): never
     {
         $body = $request->json();
-        $email = strtolower(trim((string) ($body['email'] ?? '')));
+        $username = strtolower(trim((string) ($body['username'] ?? '')));
         $password = (string) ($body['password'] ?? '');
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 254 || $password === '' || strlen($password) > 1024) {
-            Response::error(400, 'invalid_request', 'Weka email na password sahihi.');
+        if (!preg_match('/^[a-z][a-z0-9_-]{0,39}\.[a-z][a-z0-9_-]{0,39}$/', $username) || $password === '' || strlen($password) > 1024) {
+            Response::error(400, 'invalid_request', 'Weka username ya staff na password sahihi.');
         }
 
         $pdo = Database::connection();
         $limiter = new RateLimiter($pdo);
         if (!$limiter->allow('staff_login_ip', $request->ip, 15, 900)
-            || !$limiter->allow('staff_login_email', $email, 5, 900)) {
+            || !$limiter->allow('staff_login_username', $username, 5, 900)) {
             Response::error(429, 'login_unavailable', 'Huwezi kuingia kwa sasa. Jaribu tena baadaye.');
         }
 
-        $stmt = $pdo->prepare("SELECT u.id, u.password_hash, u.status, u.mfa_enabled FROM users u WHERE u.email = ? LIMIT 1");
-        $stmt->execute([$email]);
+        $stmt = $pdo->prepare("SELECT u.id, u.password_hash, u.status, u.mfa_enabled FROM users u WHERE u.username = ? LIMIT 1");
+        $stmt->execute([$username]);
         $user = $stmt->fetch();
         static $dummyHash = null;
         $hashToVerify = $user['password_hash'] ?? ($dummyHash ??= password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT));
         $validPassword = password_verify($password, $hashToVerify);
         if (!$validPassword || $user['status'] !== 'active' || (bool) $user['mfa_enabled']) {
-            Response::error(401, 'invalid_credentials', 'Email au password si sahihi, au akaunti haiwezi kuingia.');
+            Response::error(401, 'invalid_credentials', 'Username au password si sahihi, au akaunti haiwezi kuingia.');
         }
 
         $rolesStmt = $pdo->prepare("SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = ? AND r.name <> 'Customer' ORDER BY r.name");
         $rolesStmt->execute([$user['id']]);
         $roles = array_column($rolesStmt->fetchAll(), 'name');
         if (!$roles) {
-            Response::error(401, 'invalid_credentials', 'Email au password si sahihi, au akaunti haiwezi kuingia.');
+            Response::error(401, 'invalid_credentials', 'Username au password si sahihi, au akaunti haiwezi kuingia.');
         }
         $pdo->prepare('UPDATE users SET last_login_at = UTC_TIMESTAMP() WHERE id = ?')->execute([$user['id']]);
 
@@ -167,7 +191,7 @@ final class App
     {
         $userId = $this->requireStaffSession();
         $pdo = Database::connection();
-        $userStmt = $pdo->prepare("SELECT email FROM users WHERE id = ? AND status = 'active' AND mfa_enabled = 0");
+        $userStmt = $pdo->prepare("SELECT username, full_name FROM users WHERE id = ? AND status = 'active' AND mfa_enabled = 0");
         $userStmt->execute([$userId]);
         $user = $userStmt->fetch();
         if (!$user) {
@@ -184,7 +208,7 @@ final class App
         $permissionStmt = $pdo->prepare('SELECT DISTINCT p.name FROM user_roles ur JOIN role_permissions rp ON rp.role_id = ur.role_id JOIN permissions p ON p.id = rp.permission_id WHERE ur.user_id = ? ORDER BY p.name');
         $permissionStmt->execute([$userId]);
         $csrf = $_SESSION['csrf_token'] ??= bin2hex(random_bytes(32));
-        Response::ok(['email' => $user['email'], 'roles' => $roles, 'permissions' => array_column($permissionStmt->fetchAll(), 'name'), 'csrf_token' => $csrf]);
+        Response::ok(['username' => $user['username'], 'full_name' => $user['full_name'], 'roles' => $roles, 'permissions' => array_column($permissionStmt->fetchAll(), 'name'), 'csrf_token' => $csrf]);
     }
 
     private function staffLogout(): never

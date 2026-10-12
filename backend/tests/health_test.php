@@ -76,6 +76,11 @@ try {
     if ($staffSessionStatus !== 401 || ($staffSession['error']['code'] ?? '') !== 'unauthenticated') {
         throw new RuntimeException('Staff session route did not reject an unauthenticated request.');
     }
+    [$staffLoginStatus, $staffLogin] = $request('/staff/login', 'POST', '{"username":"nonexistent.test-user","password":"WrongPassword123!"}');
+    if (!in_array($staffLoginStatus, [401, 500], true) || !isset($staffLogin['error']['code'], $staffLogin['error']['message'])
+        || preg_match('/(SQLSTATE|SELECT |FROM users|C:\\\\|stack trace)/i', $staffLogin['error']['message'])) {
+        throw new RuntimeException('Staff login did not fail with a generic JSON error.');
+    }
 
     [$invalidStatus, $invalid] = $request('/portal/otp/request', 'POST', '{"account_number":"bad"}');
     if ($invalidStatus !== 400 || ($invalid['error']['code'] ?? '') !== 'invalid_request') {

@@ -5,7 +5,7 @@ PHP/MySQL API scaffold. `public/` is the only web document root; `src/`, `databa
 ## Local setup
 
 1. Use a supported PHP 8.1+ build with `pdo_mysql`, `json`, `session`, and `openssl` enabled, plus MySQL/MariaDB.
-2. Create a database named `jassnet_billing` with `utf8mb4`; review and apply migrations `001_initial_schema.sql`, `002_operations_and_access.sql`, `003_rate_limits_and_history.sql` in order. Some DDL in migrations 002/003 is one-time only; snapshot first and do not blindly rerun partial migrations.
+2. Create a database named `jassnet_billing` with `utf8mb4`; review and apply migrations `001_initial_schema.sql` through `004_staff_usernames.sql` in ascending order. Some DDL in migrations 002–004 is one-time only; snapshot first and do not blindly rerun partial migrations.
 3. Copy `.env.example` to a private environment file outside the public document root. Set DB values, a unique random `APP_KEY` (32+ characters), exact `CORS_ALLOWED_ORIGINS`, and `SESSION_SECURE_COOKIE=true` for HTTPS. Do not commit `.env`.
 4. Configure PHP/Apache to load environment variables and use this directory's `public/` folder as the document root. Enable rewrite. The example assumes XAMPP URL `/project/backend/public`.
 5. Visit `/api/v1/health`; it reports database readiness. See [../docs/API.md](../docs/API.md) for the implemented routes.
@@ -13,6 +13,12 @@ PHP/MySQL API scaffold. `public/` is the only web document root; `src/`, `databa
 ## Current scope and blockers
 
 This is a separated development backend, not a production-ready billing API. Implemented routes are health, staff login/profile/logout, PPPoE OTP request/verify, customer account summary, and logout. Staff login is rate-limited and reports database-assigned roles/permissions; it does not make staff CRUD or dashboard operations available. MFA-enabled staff accounts are denied because no MFA verification flow exists. OTP challenges are hashed, expire in five minutes, have rate/attempt controls and create a secure session; queued OTP values are encrypted with AES-256-GCM using a key derived from `APP_KEY`. However, the SMS provider and queue worker are not implemented, so OTP cannot currently be delivered. Customer/service CRUD, account creation, payment checkout/webhook verification, cash/refund operations, provisioning/RADIUS workers, support writes, and monitoring are not implemented. Schema tables alone are not those features. Do not expose as a live billing system.
+
+## Staff login and first account
+
+The staff login page is `../frontend/staff.html`; local XAMPP URL is `/project/frontend/staff.html`. Staff usernames follow `firstname.lastname`. The local database contains one account: username `hassan.hassan`, full name Hassan Abdallah Hassan, role Super Admin. To set or reset its password, run `scripts/set_staff_password.ps1 -Username hassan.hassan`; the helper loads `backend/.env`, prompts for a password without displaying it, and pipes it to PHP stdin (not command arguments). It requires at least 14 characters. Do not share the password in chat or reuse it elsewhere. This is a local machine-only recovery operation and is audited. New staff accounts can be created with `scripts/create_staff.ps1 -Username firstname.lastname -FullName 'Full Name' -Role 'Technician'`.
+
+Staff login can authenticate and display assigned roles/permissions. The module cards are intentionally disabled because no staff operations API has been implemented yet. Do not assign operational permissions or use the staff page for live billing until backend action routes enforce both role permissions and site scope.
 
 Snipper, ClickPesa, SMS, SMTP, FreeRADIUS, routers, WireGuard and OLT/ONU integrations are intentionally disabled/unverified pending inventory and confirmed official documentation, access, test environment, and approval. Never assume the reported infrastructure addresses or credentials.
 
