@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+
+# Leave real files and directories to the web server.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
